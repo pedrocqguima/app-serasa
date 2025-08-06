@@ -33,7 +33,7 @@ def clean_and_filter_table(df):
         df = df.applymap(lambda x: str(x).replace('\xa0', ' ').strip())
         df['Alteração'] = df['Alteração'].str.upper()
         filtro = df['Alteração'].isin([
-            "INCLUSAO  ANOT.INADIMPLENCIA",
+            "INCLUSAO ANOT.INADIMPLENCIA",
             "INCL/EXCL ANOT.INADIMPLENCIA"
         ])
         return df[filtro].reset_index(drop=True)
