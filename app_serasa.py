@@ -54,22 +54,22 @@ df = None
 
 if html_text:
     df = extract_table_from_html(html_text)
-    st.subheader("Tabela extraída do conteúdo colado:")
     if df is not None:
         df = clean_and_filter_table(df)
-        st.dataframe(df)
+        st.subheader("Tabela filtrada:")
+        st.dataframe(df, use_container_width=True)
     else:
-        st.warning("Nenhuma tabela foi encontrada no HTML colado.")
+        st.warning("Nenhuma tabela foi encontrada no conteúdo colado.")
         
 ## Caso o usuário tenha feito o upload do arquivo
 
 elif uploaded_file is not None:
     html_string = uploaded_file.read().decode("utf-8")
     df = extract_table_from_html(html_string)
-    st.subheader("Tabela extraída do arquivo:")
     if df is not None:
         df = clean_and_filter_table(df)
-        st.dataframe(df)
+        st.subheader("Tabela filtrada:")
+        st.dataframe(df, use_container_width=True)
     else:
         st.warning("Nenhuma tabela foi encontrada no arquivo enviado.")
         
@@ -86,4 +86,5 @@ if df is not None and not df.empty:
         data=output,
         file_name="tabela_filtrada.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
     )
