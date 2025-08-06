@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 import io
 
 st.set_page_config(page_title="App Serasa", layout="centered")
-st.title("🔍 Analisador de Alterações - Serasa Experian")
+st.title("🔍 Monitore - Serasa")
 
 uploaded_file = st.file_uploader("📁 Envie o arquivo HTML", type="html")
 
