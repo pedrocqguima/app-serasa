@@ -18,7 +18,6 @@ def extract_table_from_html(html_string):
         tables = pd.read_html(str(soup))  # Usa lxml ou html5lib
         return tables[0] if tables else None
     except Exception as e:
-        st.error(f"Erro ao processar o HTML: {e}")
         return None
 
 # Função para limpar e filtrar
@@ -36,15 +35,21 @@ def clean_and_filter_table(df):
 if uploaded_file is not None:
     html_string = uploaded_file.read().decode("utf-8")
     extracted = extract_table_from_html(html_string)
-    
-    if extracted is not None:
+
+    # ⚠️ Adicionando verificação extra
+    if extracted is None or not isinstance(extracted, pd.DataFrame):
+        st.error("❌ Nenhuma tabela válida foi encontrada no HTML enviado.")
+    else:
         df = clean_and_filter_table(extracted)
-        if not df.empty:
+
+        if df.empty:
+            st.warning("⚠️ Nenhuma linha encontrada após aplicar o filtro.")
+        else:
             st.success("✅ Tabela extraída e filtrada com sucesso.")
             st.subheader("📄 Tabela Filtrada")
             st.dataframe(df, use_container_width=True)
 
-            # Geração do Excel para download
+            # Geração do Excel
             output = io.BytesIO()
             with pd.ExcelWriter(output, engine="openpyxl") as writer:
                 df.to_excel(writer, index=False, sheet_name="Filtrado")
@@ -56,7 +61,3 @@ if uploaded_file is not None:
                 file_name="tabela_filtrada.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
-        else:
-            st.warning("⚠️ Nenhuma linha válida encontrada após o filtro.")
-    else:
-        st.warning("⚠️ Nenhuma tabela válida foi encontrada no HTML enviado.")
